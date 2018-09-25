@@ -7,6 +7,7 @@ var hostParser = {
 		var results  = [];
 		var hostMap = {};
 		var envName;
+
 		contentArr.forEach((item, index) => {
 			item = item.trim();
 			if (!item) {return;}

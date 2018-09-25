@@ -1,6 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
-
 var createReactClass = require('create-react-class');
 
 /**
@@ -40,8 +38,8 @@ var AddEnv = createReactClass({
 	},
 	render: function() {
 		return (
-			<a className="add-env button" href="#" onClick={this.add} >新增环境</a>
-		)
+			<a className="add-env button" href="#" onClick={this.add}>新增环境</a>
+		);
 	}
 });
 
@@ -59,13 +57,12 @@ var DelteEnv = createReactClass({
 	render: function() {
 		return (
 			<a className="remove-env button" href="#" onClick={this.del}>删除环境</a>
-		)
+		);
 	}
 });
 
 var Tools = createReactClass({
 	render: function() {
-		// console.log('render tools');
 		return (
 			<div className="m-title">
 				<div className="tools">
@@ -76,14 +73,16 @@ var Tools = createReactClass({
 						<div className="field-body">
 							<div className="field is-narrow">
 								<EnvSelector envNames={this.props.envNames}
-											currentEnv={this.props.currentEnv}
-											doSwitchEnv={this.props.doSwitchEnv}/>
+										currentEnv={this.props.currentEnv}
+										doSwitchEnv={this.props.doSwitchEnv}/>
 							</div>
 							<div className="field is-narrow">
 								<AddEnv doAddEnv={this.props.doAddEnv}/>
 							</div>
 							<div className="field is-narrow">
-								<DelteEnv  currentEnv={this.props.currentEnv} doDelEnv={this.props.doDelEnv} envNames={this.props.envNames}/>
+								<DelteEnv  currentEnv={this.props.currentEnv}
+										doDelEnv={this.props.doDelEnv}
+										envNames={this.props.envNames}/>
 							</div>
 						</div>
 					</div>

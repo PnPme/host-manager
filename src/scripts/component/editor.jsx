@@ -6,13 +6,12 @@ import { EDIT_STATS } from '../action/action';
 
 var Editor = createReactClass({
 	render: function() {
-		// console.log('render Editor');
 		var currentEnv= this.props.currentEnv;
 		var editState = currentEnv.editState;
 		var hostContent = currentEnv.content;
 		var editorShow;
 		if (editState === EDIT_STATS.SAVED) {
-			//展示界面
+			// 展示界面
 			var parsedHost = currentEnv.renderList;
 			var groups = [];
 			var hasGroups = parsedHost.length? true: false;
@@ -39,24 +38,28 @@ var Editor = createReactClass({
 							<span className="ip">{item.ip}</span>
 							<span className="host">{item.host}</span>
 							<span className="comment">{item.comment|| ''}</span>
-							<input className="edit-line"
+							<input className="edit-line input"
 								value={item.inputValue}
 								onChange={this.changeInput}
 								spellCheck="false"
 								style={{"display": display}}/>
-							<span className="operate" onClick={this.switchLineState}>√</span>
+							<span className="button operate" onClick={this.switchLineState}>√</span>
 						</div>
 					)
 				});
 				groups.push(
-					<div className={"group " + (items.length? '': 'empty-group')} key={groupIndex} data-index={groupIndex}>
-						<h3 className="group-name">{groupName}</h3>
-						<div className="group-ops" style={{"display": (hasOps? 'block': 'none')}}>
-							<span title="选择/取消" className={"op " + (isAllUse? '': 'unuse')} onClick={this.switchAllGroup}>√</span>
-							<span title="展开/收起" className="op close-op" onClick={this.closeGroup}>{isGroupClose? '∨': '∧'}</span>
+					<div className={"field is-horizontal group " + (items.length? '': 'empty-group')} key={groupIndex} data-index={groupIndex}>
+						<div className="field-label is-normal">
+							<h3 className="group-name">{groupName}</h3>
 						</div>
-						<div className="group-lines" style={{"display": (isGroupClose? 'none': 'block')}}>
-							{items}
+						<div className="field-body">
+							{/* <div className="group-ops" style={{"display": (hasOps? 'block': 'none')}}>
+								<a title="选择/取消" className={"button op " + (isAllUse? '': 'unuse')} onClick={this.switchAllGroup}>√</a>
+								<a title="展开/收起" className="button op close-op" onClick={this.closeGroup}>{isGroupClose? '∨': '∧'}</a>
+							</div> */}
+							<div className="group-lines" style={{"display": (isGroupClose? 'none': 'block')}}>
+								{items}
+							</div>
 						</div>
 					</div>
 				);
@@ -95,20 +98,7 @@ var Editor = createReactClass({
 		}
 		return (
 			<section className="m-editor" onClick={this.saveLine}>
-				<div className="field is-horizontal">
-					<div className="field-label is-normal">
-						<label className="label">编辑</label>
-					</div>
-					<div className="field-body">
-						<a className="env-name button" onDoubleClick={this.goEditMode} >{currentEnv.name}
-							<span className="tips">（双击编辑）</span>
-							<span style={{"display": (hasGroups? 'block': 'none')}}>
-								<span title="选择/取消" className={"env-op swich-all " + (currentEnv.allUse? '': 'unuse')} onClick={this.switchAllInEnv}>√</span>
-								<span title="展开/收起" className="env-op close-all" onClick={this.closeAllInEnv}>{currentEnv.allClose? '∨': '∧'}</span>
-							</span>
-						</a>
-					</div>
-				</div>
+
 				<div className="filter-host field is-horizontal">
 					<div className="field-label is-normal">
 						<label className="label">筛选</label>
@@ -118,6 +108,24 @@ var Editor = createReactClass({
 							<div className="control">
 								<input className="filter-input input" spellCheck="false" value={currentEnv.searchHost} onChange={this.searchHost}/>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div className="field is-horizontal">
+					<div className="field-label is-normal">
+						<label className="label">编辑</label>
+					</div>
+					<div className="field-body">
+						<div className="field is-narrow">
+							<a className="env-name button" onDoubleClick={this.goEditMode} >{currentEnv.name}
+								<span className="tips">（双击编辑）</span>
+							</a>
+						</div>
+						<div className="field is-narrow" style={{"display": (hasGroups? 'block': 'none')}}>
+							<a title="选择/取消" className={"button env-op swich-all " + (currentEnv.allUse? '': 'unuse')} onClick={this.switchAllInEnv}>√</a>
+						</div>
+						<div className="field is-narrow" style={{"display": (hasGroups? 'block': 'none')}}>
+							<a title="展开/收起" className="button env-op close-all" onClick={this.closeAllInEnv}>{currentEnv.allClose? '∨': '∧'}</a>
 						</div>
 					</div>
 				</div>
