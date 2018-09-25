@@ -1,21 +1,24 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 import { connect } from 'react-redux';
-import { doAddEnv, doSwitchEnv, doDelEnv, doSaveEnv, 
-		 doEditEnv, doSwitchEditLine, doChangeEditInput, 
-		 doSaveEditInput, doSwitchLineState, doSwitchAllGroup,
-		 doCloseGroup, doGoEditMode, doChangeContent,
-		 doSaveContent, doCancleContent, doSwitchAllInEnv,
-		 doSearchHost, doCloseAllInEnv } from '../action/action.js';
+import {
+	doAddEnv, doSwitchEnv, doDelEnv, doSaveEnv,
+	doSwitchEditLine, doChangeEditInput,
+	doSaveEditInput, doSwitchLineState, doSwitchAllGroup,
+	doCloseGroup, doGoEditMode, doChangeContent,
+	doSaveContent, doCancleContent, doSwitchAllInEnv,
+	doSearchHost, doCloseAllInEnv
+} from '../action/action.js';
 import Tools from './tools.jsx';
 import Editor from './editor.jsx';
 import { saveStore } from '../localstore.js';
 
-var App = React.createClass({
+var App = createReactClass({
 	render: function() {
 		var dispatch = this.props.dispatch;
 		return (
 			<div>
-				<Tools envNames={this.props.envNames} 
+				<Tools envNames={this.props.envNames}
 					   currentEnv={this.props.currentEnv}
 					   doSwitchEnv={name=> dispatch(doSwitchEnv(name))}
 					   doAddEnv={name=> dispatch(doAddEnv(name))}
@@ -27,7 +30,7 @@ var App = React.createClass({
 						doSaveEditInput={() => dispatch(doSaveEditInput())}
 						doSwitchLineState={itemKey=> dispatch(doSwitchLineState(itemKey))}
 						doSwitchAllGroup={groupIndex=> dispatch(doSwitchAllGroup(groupIndex))}
-						doCloseGroup={groupIndex=> dispatch(doCloseGroup(groupIndex))} 
+						doCloseGroup={groupIndex=> dispatch(doCloseGroup(groupIndex))}
 						doGoEditMode={()=> dispatch(doGoEditMode())}
 						doChangeContent={(content)=> dispatch(doChangeContent(content))}
 						doSaveContent={(content)=> dispatch(doSaveContent(content))}
@@ -36,13 +39,11 @@ var App = React.createClass({
 						doSearchHost={(value)=> dispatch(doSearchHost(value))}
 						doCloseAllInEnv={()=> dispatch(doCloseAllInEnv())}/>
 			</div>
-
 		);
 	}
 });
 
 function mapStateToProps(state) {
-	
 	state = checkState(state);
 	var rtState = saveStore(state);
 	rtState && (state = rtState); //存储出错
@@ -54,7 +55,7 @@ function mapStateToProps(state) {
 		if (value.get('name') === currentEnvName) {
 			currentEnv = value;
 		}
-	}); 
+	});
 	envNames = envNames.toJS();
 	currentEnv = currentEnv && currentEnv.toJS();
 	return {
@@ -65,17 +66,14 @@ function mapStateToProps(state) {
 
 function checkState(state) {
 	//fix 把default删除了的情况
-	var isErrorCurrent = false;
 	var currentEnvName = state.get("currentEnvName");
-	var fixName = "";
 	var envs = state.get('envs');
 	var index = envs.findIndex(value => value.get('name') === currentEnvName);
 	if (index < 0) {
 		var firstName = envs.first().get('name');
 		return state.set("currentEnvName", firstName);
-	} 
+	}
 	return state;
-	
 }
 
 export default connect(mapStateToProps)(App);

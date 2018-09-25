@@ -1,4 +1,5 @@
 var SPLIT_NAME = '@';
+
 var hostParser = {
 	parse: function(content, currentEnv) {
 		var contentArr = (content && content.split(/\r?\n/)) || [];
@@ -50,7 +51,7 @@ var hostParser = {
 				results.push(currentGroup);
 			}
 		});
-		
+
 		return {
 			renderList: results,
 			hostMap: hostMap,
@@ -84,7 +85,7 @@ var hostParser = {
 	        	temp[hostStr] = 1;
 	        });
 	        keys = Object.keys(temp);
-	        // 拆开连续的host 例如: 127.0.0.1 localhost localhost1 localhost2 
+	        // 拆开连续的host 例如: 127.0.0.1 localhost localhost1 localhost2
 	        keys.forEach(function(hostStr) {
 	            parseResult.result.push({
 	                ip: ip.trim(),
@@ -119,12 +120,12 @@ var hostParser = {
 			this.resortLine(oldGroup); //重排group
 			return _backData;
 		}
-		
+
 		var newLine = newResult.result[0];
-		if (newResult.result.length === 1 
+		if (newResult.result.length === 1
 			&& newLine.used === oldLine.used
-			&& newLine.ip === oldLine.ip 
-			&& newLine.host === oldLine.host 
+			&& newLine.ip === oldLine.ip
+			&& newLine.host === oldLine.host
 			&& newLine.comment === oldLine.comment) {
 			//未发生变化
 			return _backData;
@@ -139,8 +140,8 @@ var hostParser = {
 	resortLine: function(group) {
 		group.items.forEach((line, index) => {
 			this.initLine(line, group);
-			line.index = index; 
-			
+			line.index = index;
+
 		});
 	},
 	initLine: function(line, group) {
@@ -205,15 +206,15 @@ var hostParser = {
 				//关闭
 				line.used = !currentState;
 			} else {
-				!tempMap[line.host] 
-				&& (line.used = !currentState) 
+				!tempMap[line.host]
+				&& (line.used = !currentState)
 				&& doLines.push(line)
 				&& (tempMap[line.host] = line.ip);
 			}
 		});
 		return doLines;
 	}
-	
+
 }
 
 export default hostParser;

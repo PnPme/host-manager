@@ -16,7 +16,7 @@ export const CANCLE_CONTENT = "CANCLE_CONTENT";
 export const SWITHCH_ALL_IN_ENV = "SWITHCH_ALL_IN_ENV";
 export const SEARCH_HOST = "SEARCH_HOST";
 export const CLOSE_ALL_IN_ENV = "CLOSE_ALL_IN_ENV";
-// export const CHANGE_GROUP_NAME = "CHANGE_GROUP_NAME";
+
 export const EDIT_STATS = {
 	UN_SAVE: "UN_SAVE",
 	SAVED: "SAVED"
@@ -149,15 +149,9 @@ export function doSearchHost(value) {
 		value: value
 	}
 }
+
 export function doCloseAllInEnv() {
 	return {
 		type: CLOSE_ALL_IN_ENV
 	}
 }
-//修改组名
-// export function doChangeGroupName(groupIndex) {
-// 	return {
-// 		type: CHANGE_GROUP_NAME,
-// 		groupIndex: groupIndex
-// 	}
-// }

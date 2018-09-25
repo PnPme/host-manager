@@ -1,6 +1,4 @@
-/**
- * Created by leon on 15/11/28.
- */
+require('bulma/css/bulma.css');
 require('../styles/reset.css');
 require('../styles/app.scss');
 require('./app.js');

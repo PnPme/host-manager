@@ -1,7 +1,10 @@
 import React from 'react';
-import {EDIT_STATS} from '../action/action.js';
-import hostParser from '../util/hostParser.js';
-var Editor = React.createClass({
+import $ from 'jquery';
+var createReactClass = require('create-react-class');
+
+import { EDIT_STATS } from '../action/action';
+
+var Editor = createReactClass({
 	render: function() {
 		// console.log('render Editor');
 		var currentEnv= this.props.currentEnv;
@@ -27,16 +30,16 @@ var Editor = React.createClass({
 					var isInSearch = currentEnv.searchHost && (item.inputValue.indexOf(currentEnv.searchHost) >= 0);
 					var inSearchClass = currentEnv.searchHost.trim()? (isInSearch? ' in-search': ' hide'): '';
 					items.push(
-						<div className={'line ' + (item.used? '': 'unuse') + inSearchClass} 
-							key={itemKey} 
+						<div className={'line ' + (item.used? '': 'unuse') + inSearchClass}
+							key={itemKey}
 							data-index={item.index}
-							data-group-name={groupName} 
+							data-group-name={groupName}
 							data-key={itemKey}
 							onDoubleClick={this.editLine}>
 							<span className="ip">{item.ip}</span>
 							<span className="host">{item.host}</span>
 							<span className="comment">{item.comment|| ''}</span>
-							<input className="edit-line" 
+							<input className="edit-line"
 								value={item.inputValue}
 								onChange={this.changeInput}
 								spellCheck="false"
@@ -63,24 +66,60 @@ var Editor = React.createClass({
 			//编辑界面
 			editorShow = (
 				<div>
-					<textarea spellCheck="false" className="js-editor editor-mod" ref="editor" value={hostContent} onChange={this.changeContent}></textarea>
-					<span className="save-content" onClick={this.saveContent}>保存</span>
-					<span className="cancle-content" onClick={this.cancleContent}>取消</span>
+					<div className="field is-horizontal">
+						<div className="field-label is-normal">
+							<label className="label">编辑</label>
+						</div>
+						<div className="field-body">
+							<div className="field">
+								<p className="control is-expanded has-icons-left">
+									<textarea spellCheck="false" className="js-editor editor-mod textarea" ref="editor" value={hostContent} onChange={this.changeContent}></textarea>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div className="field is-horizontal">
+						<div className="field-label is-normal">
+						</div>
+						<div className="field-body">
+							<div className="field is-narrow">
+								<a className="save-content button" onClick={this.saveContent}>保存</a>
+							</div>
+							<div className="field is-narrow">
+								<a className="cancle-content button" onClick={this.cancleContent}>取消</a>
+							</div>
+						</div>
+					</div>
 				</div>
 			)
 		}
 		return (
 			<section className="m-editor" onClick={this.saveLine}>
-				<h2 className="env-name" onDoubleClick={this.goEditMode} >{currentEnv.name}
-					<span className="tips">（双击编辑）</span>
-					<span style={{"display": (hasGroups? 'block': 'none')}}>
-						<span title="选择/取消" className={"env-op swich-all " + (currentEnv.allUse? '': 'unuse')} onClick={this.switchAllInEnv}>√</span>
-						<span title="展开/收起" className="env-op close-all" onClick={this.closeAllInEnv}>{currentEnv.allClose? '∨': '∧'}</span>
-					</span>
-				</h2>
-				<div className="filter-host">
-					<label className="filter-name">筛选</label>
-					<input className="filter-input" spellCheck="false" value={currentEnv.searchHost} onChange={this.searchHost}/>
+				<div className="field is-horizontal">
+					<div className="field-label is-normal">
+						<label className="label">编辑</label>
+					</div>
+					<div className="field-body">
+						<a className="env-name button" onDoubleClick={this.goEditMode} >{currentEnv.name}
+							<span className="tips">（双击编辑）</span>
+							<span style={{"display": (hasGroups? 'block': 'none')}}>
+								<span title="选择/取消" className={"env-op swich-all " + (currentEnv.allUse? '': 'unuse')} onClick={this.switchAllInEnv}>√</span>
+								<span title="展开/收起" className="env-op close-all" onClick={this.closeAllInEnv}>{currentEnv.allClose? '∨': '∧'}</span>
+							</span>
+						</a>
+					</div>
+				</div>
+				<div className="filter-host field is-horizontal">
+					<div className="field-label is-normal">
+						<label className="label">筛选</label>
+					</div>
+					<div className="field-body">
+    					<div className="field">
+							<div className="control">
+								<input className="filter-input input" spellCheck="false" value={currentEnv.searchHost} onChange={this.searchHost}/>
+							</div>
+						</div>
+					</div>
 				</div>
 				{editorShow}
 			</section>
@@ -93,9 +132,9 @@ var Editor = React.createClass({
 		var target = e.target;
 		var $line = $(target).closest('.line');
 		var itemKey = $line.data('key');
-		!editLine 
+		!editLine
 		&& (!$(target).hasClass('operate'))
-		&& (itemKey != editLine) 
+		&& (itemKey != editLine)
 		&& this.props.doSwitchEditLine(itemKey);
 	},
 	saveLine: function(e) {

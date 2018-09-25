@@ -1,20 +1,25 @@
 /* 持久化存储方案 */
 import immutable from 'immutable';
-import hostParser from './util/hostParser.js';
-import { EDIT_STATS } from './action/action.js';
-var hostPath, isNodeWebKit = false, 
-	gui = global.require && global.require('nw.gui'), 
+import hostParser from './util/hostParser';
+import { EDIT_STATS } from './action/action';
+import $ from 'jquery';
+
+var hostPath;
+var isNodeWebKit = false,
+	gui = global.require && global.require('nw.gui'),
 	path = global.require && global.require('path'),
 	fs = global.require && global.require('fs');
-//存在window上给node-webkit使用
+
+// 存在window上给node-webkit使用
 if (gui) {
 	hostPath = path.join( gui.App.dataPath , './hosts');
 	isNodeWebKit = true;
 }
+
 export function saveStore(state) {
 	try {
 		var stateJs = state.toJSON();
-		
+
 		if (isNodeWebKit) {
 			// node-webkit
 	    	fs.writeFileSync(hostPath, JSON.stringify(stateJs));
@@ -22,11 +27,10 @@ export function saveStore(state) {
 			localStorage.setItem('hostManager', JSON.stringify(stateJs));
 		}
 	} catch(e) {
-		top.logger && top.logger.doLog('error', e.message); 
+		top.logger && top.logger.doLog('error', e.message);
 		return getInitStates();
 	}
 	top && (top.__hostState = stateJs); //for findhost
-	
 }
 
 export function getStore() {
@@ -35,14 +39,14 @@ export function getStore() {
 		try {
 			var state = fs.readFileSync(hostPath, 'utf-8');
 		} catch(e) {
-			top.logger && top.logger.doLog('error', e.message); 
+			top.logger && top.logger.doLog('error', e.message);
 			state = {};
 		}
 	} else {
 		var state = localStorage.getItem('hostManager');
 	}
 	try {
-		state = JSON.parse(state); 
+		state = JSON.parse(state);
 	} catch(e) {
 		// 老版本的存的字符串
 	}
@@ -56,6 +60,7 @@ export function getNewEnvState(name) {
 		})
 	)
 }
+
 export function getInitStates() {
 	var result, state;
 	var initState = getStore();

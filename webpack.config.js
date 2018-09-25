@@ -1,47 +1,52 @@
-var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-	entry: {
-        pack: "./scripts/release.js",
-        vendor: "./scripts/vendor.js",
-        common: ["react", "react-dom"]
+    mode: 'development',
+    watch: true,
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
     },
-	context: __dirname + '/app/src',
-	output: {
-		path: __dirname + '/app/prd',
-        publicPath: "/app/prd/",
-		filename: "[name].js"
-	},
+    performance: {
+        hints: process.env.NODE_ENV === 'production' ? "warning" : false
+    },
+	entry: {
+        pack: './src/scripts/release.js',
+        common: [ 'jquery', 'react', 'react-dom' ]
+    },
     module: {
-        noParse: ['jquery'],
-        loaders: [
+        noParse: /jquery/,
+        rules: [
             {
                 test: /\.js|\.jsx$/,
-                exclude: /node_modules|vendor/,
-                loader: "babel",
-                query: {
-                    presets: ['es2015', "react"]
-                }
+                exclude: /node_modules/,
+                use: [
+                    "babel-loader"
+                ]
             },
             {
                 test: /\.scss|\.css$/,
-                // loader: 'style!css!sass'
-                loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader")
+                use:[
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader"
+                ]
             }
         ]
     },
     resolve: {
-        alias: {
-            // "jquery": __dirname + '/app/prd/' + 'jquery.min.js',
-
-        },
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin("common", /* filename= */"common.js"),
-        new ExtractTextPlugin("[name].css")
-    ],
-    devtool: 'source-map',
-    watch: true
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'index.html'
+        }),
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        })
+    ]
 }

@@ -1,28 +1,15 @@
 import { ADD_ENV, SWITCH_ENV, DEL_ENV, SAVE_ENV, EDIT_ENV,
-		 EDIT_STATS, SWITCH_EDIT_LINE, CHANGE_EDIT_INPUT, 
+		 EDIT_STATS, SWITCH_EDIT_LINE, CHANGE_EDIT_INPUT,
 		 SAVE_EDIT_INPUT, SWITCH_LINE_STATE, SWITCH_ALL_GROUP,
-		 CLOSE_GROUP, GO_EDIT_MODE, CHANGE_CONTENT, SAVE_CONTENT, 
+		 CLOSE_GROUP, GO_EDIT_MODE, CHANGE_CONTENT, SAVE_CONTENT,
 		 CANCLE_CONTENT, SWITHCH_ALL_IN_ENV, SEARCH_HOST, CLOSE_ALL_IN_ENV } from '../action/action.js';
 import immutable from 'immutable';
 import hostParser from '../util/hostParser.js';
 import { getInitStates, getNewEnvState } from '../localstore.js';
 
-/*
-	state = {
-		"envs": [{
-			"name": "envA",
-			"content": "",
-			"postContent": ""
-			"editState": "saved"
-		}],
-		"currentEnvName": "envA"
-	}
-*/
-
-
 function hostManager(state, action) {
 	switch(action.type) {
-		case EDIT_ENV: 
+		case EDIT_ENV:
 			return setEditSate(state, action.content);
 		case SAVE_ENV:
 			return saveEnv(state, action.content);
@@ -36,13 +23,13 @@ function hostManager(state, action) {
 			return switchEditLine(state, action.itemKey);
 		case CHANGE_EDIT_INPUT:
 			return changeEditInput(state, action.itemKey, action.value);
-		case SAVE_EDIT_INPUT: 
+		case SAVE_EDIT_INPUT:
 			return saveEditInput(state);
 		case SWITCH_LINE_STATE:
 			return switchLineState(state, action.itemKey);
 		case SWITCH_ALL_GROUP:
 			return switchAllGroup(state, action.groupIndex);
-		case CLOSE_GROUP: 
+		case CLOSE_GROUP:
 			return closeGroup(state, action.groupIndex);
 		case GO_EDIT_MODE:
 			return goEditMode(state);
@@ -54,16 +41,16 @@ function hostManager(state, action) {
 			return cancleContent(state);
 		case SWITHCH_ALL_IN_ENV:
 			return switchAllInEnv(state);
-		case SEARCH_HOST: 
+		case SEARCH_HOST:
 			return searchHost(state, action.value);
 		case CLOSE_ALL_IN_ENV:
 			return closeAllInEnv(state);
 		// case CHANGE_GROUP_NAME:
 		// 	return changeGroupName(state, action.groupIndex);
-		default: 
+		default:
 			return getInitStates();
 	}
-	
+
 }
 
 function setEditSate(state, content) {
@@ -102,7 +89,7 @@ function delEnv(state, name) {
 		return list.remove(index);
 	});
 	return nstate.set('currentEnvName', 'default');
-	
+
 }
 
 function switchEditLine(state, itemKey) {
@@ -114,7 +101,7 @@ function switchEditLine(state, itemKey) {
 	return _updateLine(nstate, itemKey, function(line) {
 		var inputValue = hostParser.getInputValue(line.toJS());
 		return line.set('inputValue', inputValue);
-	});	 
+	});
 }
 
 function changeEditInput(state, itemKey, value) {
@@ -158,7 +145,7 @@ function switchLineState(state, itemKey) {
 		});
 	}
 	return nstate;
-	
+
 }
 
 function switchAllGroup(state, groupIndex) {
@@ -171,7 +158,7 @@ function switchAllGroup(state, groupIndex) {
         	if (doLines.length) {
         		//开启该组当前的，需要关闭其他组同类
         		newList = hostParser.forceUse(newList, doLines);
-        	} 
+        	}
         	group.used = !group.used;
        		return immutable.fromJS(newList);
         });
@@ -209,14 +196,18 @@ function saveContent(state) {
 	var nstate = _updateCurrentEnv(state, current => {
 		var name = current.get('name');
 		var content = current.get('content');
+
 		var result = hostParser.parse(content, name);
+
 		envName = result.envName;
+
 		return current.withMutations(current=> {
 			current.set('name', envName);
 			current.set('renderList', immutable.fromJS(result.renderList));
 			current.set('editState', EDIT_STATS.SAVED);
 		})
 	});
+
 	return nstate.set('currentEnvName', envName);
 }
 
